@@ -14,11 +14,13 @@ require('dotenv').config();
 
 app.use(express.json());
 
-const path = require('../../serverelanga-firebase-adminsdk-7j0ub-ae6ae15045.json');
+//const path = require('../../serverelanga-firebase-adminsdk-7j0ub-ae6ae15045.json');
 const prisma = new PrismaClient();
 
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+
 admin.initializeApp({
-    credential: admin.credential.cert(path),
+    credential: admin.credential.cert(serviceAccount),
 });
 
 const emailSchema = Joi.string()
