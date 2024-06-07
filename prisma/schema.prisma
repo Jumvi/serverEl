@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id Int @id @default(autoincrement())
+  nom String
+  postNom String
+  email String @unique
+  password String
+  telephone String @unique 
+  createdAt DateTime @default(now())
+  role Role 
+  monToken String? @unique
+  localisation String?
+  Biography String?
+  profilImage String?
+  verified Boolean?
+  otpSecret String?
+
+  
+
+  projects Project[]
+  contribution Contribution[]
+}
+
+enum Role{
+  admin
+  investisseur
+  porteurProjet
+}
+
+
+model Project{
+  id Int @id @default(autoincrement())
+  titre String
+  description String
+  duree String
+  image String
+  pdfProjet String
+  localisation String
+  categorie Categorie
+
+  user Users? @relation(fields:[userId],references:[id])
+  userId Int?
+  contribution Contribution[]
+}
+
+
+enum Categorie{
+  agricole
+  agroalimentaire
+}
+
+model Contribution{
+  id Int @id @default(autoincrement()) @unique
+  montant Float
+  echeancePaiement String
+  conditionRemboursement String
+  releverBancaire String
+  typeInvestissement TypeInvestissement
+  
+  user Users? @relation(fields: [userId],references: [id])
+  userId Int?
+  project Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+}
+
+enum TypeInvestissement{
+  don 
+  investissement
+}

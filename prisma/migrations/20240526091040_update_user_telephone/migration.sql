@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Users" ALTER COLUMN "telephone" DROP DEFAULT,
+ALTER COLUMN "telephone" SET DATA TYPE TEXT;
