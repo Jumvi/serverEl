@@ -6,29 +6,24 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { PrismaClient } = require('@prisma/client');
 const Joi = require('joi');
-const otpGenerator = require('otp-generator');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const { log } = require('console');
 
 
-// const idTwilio = "AC894413b287fb71f5ce63cbf84acb6d1d";
-// const authTwilio = "89052b36e81b4ab0de99787f44193c37";
-
-// const client = require('twilio')(idTwilio,authTwilio);
 require('dotenv').config();
 
 
 app.use(express.json());
 
-//const path = require('../../serverelanga-firebase-adminsdk-7j0ub-ae6ae15045.json');
 const prisma = new PrismaClient();
 
 const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
+
 });
 
 const emailSchema = Joi.string()
@@ -92,13 +87,8 @@ async function getLogin(req, res) {
             return res.status(403).json({ success: false, message: 'Mot de passe incorrect, veuillez réessayer' });
         }
 
+
         const otpCode = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-
-        // await client.messages.create({
-        //     body:`votre otp de vérification est ${otpCode}`,
-
-        // })
-        
 
         await sendOTPToUser(user, otpCode);
 
@@ -135,6 +125,7 @@ async function sendOTPToUser(user, otp) {
 }
 
 async function verifyOtp (req,res){
+
     const { email, otp } = req.body;
 
     try {
@@ -143,6 +134,7 @@ async function verifyOtp (req,res){
         });
 
         if (!user || user.otpSecret !== otp) {
+
             return res.status(403).json({ success: false, message: 'OTP incorrect, veuillez réessayer' });
         }
 
@@ -159,6 +151,7 @@ async function verifyOtp (req,res){
         res.status(500).json({ success: false, message: 'Erreur de base de données' });
     }
 }
+
 
 async function forgotpassword(req,res){
     const {email} = req.body;
@@ -238,3 +231,4 @@ async function resetPassword(req,res){
 
 
 module.exports = { getLogin,verifyOtp,forgotpassword,resetPassword };
+

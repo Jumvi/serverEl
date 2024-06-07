@@ -5,9 +5,8 @@ const Joi = require('joi');
 const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
-const apiKey = "AIzaSyA8yk5QDFMq0S-pH0bi6J0wZblAwIbAznA";
-
 require('dotenv').config
+
 
 const prisma = new PrismaClient();
 
@@ -108,78 +107,11 @@ const userSchema = Joi.object({
     type:nameSchema
 });
 
-//async function createNewUser(req, res) {
-    //const { nom, postNom, email, password, telephone, type } = req.body;
-    //const { error } = await userSchema.validate({ email, password,telephone,nom,postNom,type });
-
-   // if (error) {
-       // console.error('Données non valides', error.details[0].message);
-       // return res.status(400).json({ success: false, message: error.details[0].message });
-    //}
-
-    // Configuration du transporteur Nodemailer
-//const transporter = nodemailer.createTransport({
- // host: 'smtp.gmail.com', 
- // port: 587,
-  //auth: {
-   // user: 'judahmvi@gmail.com', 
-   // pass: 'kerenemvi95' 
- // }
-//});
-
-//création du token de verification du mail
-// const token = uuidv4();
-
-//     try {
-//         const hashPassword = await bscript.hash(password, 10);
-//         const newUser = await prisma.users.create({
-//             data: {
-//                 nom,
-//                 postNom,
-//                 email,
-//                 telephone,
-//                 password: hashPassword,
-//                 role: type,
-//                 monToken:token,
-//                 verified:false
-//             }
-//         });
-
-//         return res.status(201).json({ success: true, user: newUser });
-//     } catch (error) {
-//         console.error("Erreur lors de l'ajout d'un utilisateur:", error);
-//         return res.status(500).json({ success: false, message: 'Database error' });
-//     }
-
-//      // Configuration de l'e-mail de vérification
-//   const mailOptions = {
-//     from: 'judahmvi@gmail.com',
-//     to: email,
-//     subject: 'Aidez-nous à vérifier votre compte',
-//     html: `
-//       <p>Bonjour ${nom},</p>
-//       <p>Merci de vous être inscrit sur notre plateforme ! Veuillez cliquer sur le lien suivant pour vérifier votre adresse e-mail:</p>
-//       <a href="http://localhost:3000/verify-email/${token}/${newUser.id}">Vérifier l'adresse e-mail</a>
-//     `
-//   };
-
-//    // Envoi de l'e-mail de vérification
-//    transporter.sendMail(mailOptions, (error, info) => {
-//     if (error) {
-//       console.error('Erreur lors de l\'envoi de l\'e-mail de vérification:', error);
-//       return res.status(500).json({ success: false, message: 'Erreur d\'envoi d\'e-mail' });
-//       return;
-//     }
-//     console.log('Email de vérification envoyé:', info.messageId);
-//   });
-
-//   // Envoi d'une réponse JSON à l'utilisateur
-//   return res.status(201).json({ success: true, message: 'Compte créé avec succès ! Veuillez vérifier votre adresse e-mail pour activer votre compte.', token });
-// }
 
 
 async function createNewUser(req, res) {
     const { nom, postNom, email, password, telephone, type,profilImage } = req.body;
+
     const { error } = await userSchema.validate({ email, password,telephone,nom,postNom,type });
 
     if (error) {
@@ -196,13 +128,13 @@ const transporter = nodemailer.createTransport({
   auth: {
    user: "judahmvi@gmail.com", 
    pass: process.env.EMAIL_PASS
+
  }
 });
 
 
   
     try {
-      // ... (User creation successful)
       const hashPassword = await bscript.hash(password, 10);
       const newUser = await prisma.users.create({
           data: {
@@ -218,7 +150,7 @@ const transporter = nodemailer.createTransport({
           }
       });
   
-      // Sending JSON response to the user
+      
       return res.status(201).json({ success: true, message: 'compte créer avec succés! pour activer votre compte, veillez repondre au mail.', token });
     } catch (error) {
       console.error('Erreur lors de la création de l\' utilisateur:', error);

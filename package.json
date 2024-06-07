@@ -9,6 +9,7 @@
     "start": "nodemon server.js",
     "vercel-build": "echo 'Build complete'",
     "postinstall": "prisma generate"
+
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@prisma/client": "^5.14.0",
     "axios": "^1.7.2",
+
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "bscript": "^0.1.0",
