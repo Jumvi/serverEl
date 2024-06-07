@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
 
-
-<<<<<<< HEAD
 const {getLogin,verifyOtp,forgotpassword,resetPassword} = require('../controllers/auth');
 
 
