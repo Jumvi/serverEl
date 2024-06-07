@@ -1,0 +1,5 @@
+node_modules
+# Keep environment variables out of version control
+.env
+
+serverelanga-firebase-adminsdk-7j0ub-ae6ae15045.json
