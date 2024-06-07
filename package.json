@@ -9,7 +9,6 @@
     "start": "nodemon server.js",
     "vercel-build": "echo 'Build complete'",
     "postinstall": "prisma generate"
-
   },
   "keywords": [],
   "author": "",
