@@ -86,7 +86,6 @@ async function getLogin(req, res) {
             return res.status(403).json({ success: false, message: 'Mot de passe incorrect, veuillez réessayer' });
         }
 
-
         const otpCode = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
 
         await sendOTPToUser(user, otpCode);
@@ -124,7 +123,6 @@ async function sendOTPToUser(user, otp) {
 }
 
 async function verifyOtp (req,res){
-
     const { email, otp } = req.body;
 
     try {
@@ -133,7 +131,6 @@ async function verifyOtp (req,res){
         });
 
         if (!user || user.otpSecret !== otp) {
-
             return res.status(403).json({ success: false, message: 'OTP incorrect, veuillez réessayer' });
         }
 
@@ -150,7 +147,6 @@ async function verifyOtp (req,res){
         res.status(500).json({ success: false, message: 'Erreur de base de données' });
     }
 }
-
 
 async function forgotpassword(req,res){
     const {email} = req.body;
@@ -230,4 +226,3 @@ async function resetPassword(req,res){
 
 
 module.exports = { getLogin,verifyOtp,forgotpassword,resetPassword };
-
