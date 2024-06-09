@@ -155,7 +155,7 @@ const transporter = nodemailer.createTransport({
       });
   
       
-      return res.status(201).json({ success: true, message: 'compte créer avec succés! pour activer votre compte, veillez repondre au mail.', token });
+      return res.status(201).json({ success: true, message: 'compte créer avec succés! pour activer votre compte, veillez repondre au mail.', token,newUser });
     } catch (error) {
       console.error('Erreur lors de la création de l\' utilisateur:', error);
       return res.status(500).json({ success: false, message: 'erreur de la base de donnée' });

@@ -25,9 +25,8 @@ const userSchema = Joi.object({
     description: nameSchema,
     duree:nameSchema,
     categorie:nameSchema,
-    image:nameSchema,
-    pdfProjet:nameSchema,
-    localisation:nameSchema
+    
+    
     
 });
 
@@ -107,8 +106,12 @@ async function getProjectsByUsers(req, res) {
 }
 
 async function createNewProject(req, res) {
-  const { titre, description,duree,localisation,categorie,image,pdfProjet, userId } = req.body; 
-  const { error } = await userSchema.validate({ titre, description,duree,localisation,categorie,image,pdfProjet });
+  const { titre, description,duree,localisation,categorie, id,recompense} = req.body; 
+  const pdfProjet = req.files?.pdfProjet?.[0]?.path || null;
+  const image = req.files?.image?.[0]?.path || null;
+  const risque = req.files?.risque?.[0]?.path || null;
+
+  const { error } = await userSchema.validate({ titre, description,duree,categorie});
 
   if (error) {
     console.error('Données non valides', error.details[0].message);
@@ -116,7 +119,8 @@ async function createNewProject(req, res) {
 }
 
   try {
-    const findUserByUserId = await prisma.project.findUnique({
+    const userId = parseInt(id,10);
+    const findUserByUserId = await prisma.users.findUnique({
       where:{
         id:userId
       }
@@ -125,7 +129,7 @@ async function createNewProject(req, res) {
     if(!findUserByUserId){
       res.status(404).send('Not found')
     }
-    await prisma.project.create({
+    const newProjet = await prisma.project.create({
       data: {
         titre,
         description,
@@ -134,6 +138,8 @@ async function createNewProject(req, res) {
         categorie,
         image,
         pdfProjet,
+        recompense,
+        risque,
         user:{
           connect:{
             id:userId
@@ -142,8 +148,8 @@ async function createNewProject(req, res) {
       }
     });
 
-    res.status(201).json({success:true});
-
+    res.status(201).json({success:true,projet :newProjet});
+    console.log('success');
   } catch (error) {
     console.error('Erreur lors de la création:', error);
     res.status(500).send({message:error.status});

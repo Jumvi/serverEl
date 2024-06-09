@@ -4,6 +4,18 @@ const { getAllProjects,getProjectsByUsers,getProjectById,getProjectByName,create
 const authorize = require('../../src/config/security/authorization');
 const authenticate = require('../../src/config/security/authenticate');
 const passport = require('passport');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    },
+});
+
+const upload = multer({ storage: storage });
 
 //différentes routes
 
@@ -13,7 +25,11 @@ router.get('/:id', getProjectById);
 
 router.get('/myprojects/:id',passport.authenticate('jwt', { session: false }),getProjectById)
 
-router.post('/', createNewProject);
+router.post('/', upload.fields([
+    { name: 'image', maxCount: 1 },
+    { name: 'pdfProjet', maxCount: 1 },
+    {name:'risque',maxCount:1}
+  ]), createNewProject);
 
 router.put('/:id',passport.authenticate('jwt', { session: false }),authorize, updateProject);
 
