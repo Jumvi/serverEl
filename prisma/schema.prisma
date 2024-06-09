@@ -37,8 +37,8 @@ model Users {
 
 enum Role{
   admin
-  investisseur
-  porteurProjet
+  Entrepreneur
+  Contributeur
 }
 
 

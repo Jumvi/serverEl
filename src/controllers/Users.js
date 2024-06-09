@@ -5,6 +5,7 @@ const Joi = require('joi');
 const nodemailer = require('nodemailer');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
+const  multer   =  require ( 'multer' ) ;
 require('dotenv').config
 
 
@@ -103,16 +104,17 @@ const userSchema = Joi.object({
     password: passwordSchema,
     nom:nameSchema,
     postNom:nameSchema,
-    telephone:telephoneSchema,
-    type:nameSchema
+    telephone:telephoneSchema
 });
 
 
+async function  createNewUser(req, res) {
+    const { nom, postNom, email, password, telephone, type,Biographie,localisation} = req.body;
+    const profilImage= req.file ? req.file.path : null;
 
-async function createNewUser(req, res) {
-    const { nom, postNom, email, password, telephone, type,profilImage } = req.body;
+    
 
-    const { error } = await userSchema.validate({ email, password,telephone,nom,postNom,type });
+    const { error } = await userSchema.validate({ email, password,telephone,nom,postNom });
 
     if (error) {
         console.error('Données non valides', error.details[0].message);
@@ -146,7 +148,9 @@ const transporter = nodemailer.createTransport({
               role: type,
               monToken:token,
               verified:false,
-              profilImage 
+              profilImage,
+              Biography,
+              localisation
           }
       });
   
@@ -231,11 +235,11 @@ async function deleteuser(req,res){
         if (!findUserByUser) {
             return res.status(404).send('Not found');
         }
-        if(findUserByUser.role=== "admin"){
-            await  prisma.users.delete({where:{id:parseInt(id,10)}});
-            return res.status(200).send('succès');
-        }
-        return res.status(200).send('permission  denied');
+        // if(findUserByUser.role=== "admin"){
+        //     await  prisma.users.delete({where:{id:parseInt(id,10)}});
+        //     return res.status(200).send('succès');
+        // }
+        return res.status(200).send('fait  ');
 
     } catch (error) {
         console.error("erreur lors de la suppression d\'un utilisateur", error);
