@@ -3,8 +3,10 @@ const server = express();
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
-const PORT = process.env.PORT||3000;
 const cors = require('cors');
+const path = require('path');
+const PORT = process.env.PORT||3000;
+
 
 
 const projectRouter = require('./src/routes/projectRouter');
@@ -24,6 +26,7 @@ server.use(cors({
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type', 'Authorization']
   }));
+  server.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 server.use(helmet()); //ajout de la sécurité sur l'entête ainsi que l'ajout des quelques fonctionnalités de sécurité
 

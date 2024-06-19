@@ -48,13 +48,14 @@ model Project{
   description String
   duree String
   image String
+  budget Float @default(0)
+  totalRecu Float @default(0)
   pdfProjet String
   recompense String?
   risque String?
   localisation String?
   categorie Categorie
   
-
 
   user Users? @relation(fields:[userId],references:[id])
   userId Int?
