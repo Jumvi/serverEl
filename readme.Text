@@ -1,4 +1,24 @@
-Documentation de l'API pour la gestion des utilisateurs
+
+DOCUMENTATION API POUR LA GESTION DE ELANGA UNE PLATEFORM DE CROWFUNDING
+
+Outils et framework: 
+1. Express : 
+2.helmet: permet d'encodé les entête des requetes afin d'en assuré la sécurité,
+3.Joi: validation des données côté server;
+4.cryto:génération de token en caractère hexadécimal de 20 octets;
+5.bscrypt: permet de hasher les mot de passes ;
+6.passport: definit la stratégie d'authentification;
+7. JWT: gestion des autorisations basé sur le token;
+8. ORM Prisma: gestion des entéraction avec la base de données en utilisant le modèle MVC
+9.nodemailer: permet d'envoyer des mails aux clients dans le cas de l'envoie des otp par mails lors de la 2FACT authentication
+10.Firebase-admin: api de génération des otps;
+11. Multer:gestion du téléchargement des files;
+12.CORS : gestion du dialogue de l'api et le client;
+11. dotenv: accès aux variables d"environnements
+
+le fichier env, contient toutes les variables d'enviromment permettant la connexion.
+
+API pour la gestion des utilisateurs
 Cette API permet de gérer les utilisateurs d'une application à l'aide d'Express.js 
 et Prisma ORM. Elle inclut des fonctionnalités telles que la création, la récupération, 
 la mise à jour, et la suppression des utilisateurs, ainsi que l'envoi de courriels de vérification.
@@ -74,3 +94,472 @@ emailSchema: Valide le format de l'email.
 passwordSchema: Valide le format et la complexité du mot de passe.
 nameSchema: Valide le format du nom et du post-nom.
 telephoneSchema: Valide le format du numéro de téléphone.
+
+
+ API pour la Gestion des Projets
+Ce README décrit les endpoints disponibles pour la gestion des projets via une API.
+
+Endpoint : /projects
+Description : Récupère tous les projets disponibles.
+
+Méthode : GET
+Paramètres : Aucun
+Retour : Liste de tous les projets existants.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /projects
+Réponse :
+json
+Copier le code
+[
+  {
+    "id": 1,
+    "titre": "Nom du projet",
+    "description": "Description du projet",
+    "duree": "Durée du projet en mois",
+    "localisation": "Localisation du projet",
+    "categorie": "Catégorie du projet",
+    "image": "URL de l'image du projet",
+    "budget": 10000,
+    "totalRecu": 5000,
+    "pdfProjet": "URL du fichier PDF du projet",
+    "recompense": "Récompense pour le projet",
+    "risque": "URL du fichier de risque",
+    "userId": 1,
+    "createdAt": "2024-06-19T12:00:00Z",
+    "updatedAt": "2024-06-20T08:00:00Z"
+  },
+  {
+    "id": 2,
+    "titre": "Autre projet",
+    ...
+  }
+]
+Endpoint : /projects/:id
+Description : Récupère un projet spécifique par son ID.
+
+Méthode : GET
+Paramètres : id (ID du projet)
+Retour : Détails du projet correspondant à l'ID.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /projects/1
+Réponse :
+json
+Copier le code
+{
+  "id": 1,
+  "titre": "Nom du projet",
+  "description": "Description du projet",
+  "duree": "Durée du projet en mois",
+  "localisation": "Localisation du projet",
+  "categorie": "Catégorie du projet",
+  "image": "URL de l'image du projet",
+  "budget": 10000,
+  "totalRecu": 5000,
+  "pdfProjet": "URL du fichier PDF du projet",
+  "recompense": "Récompense pour le projet",
+  "risque": "URL du fichier de risque",
+  "userId": 1,
+  "createdAt": "2024-06-19T12:00:00Z",
+  "updatedAt": "2024-06-20T08:00:00Z"
+}
+Endpoint : /projects/categorie/:categorie
+Description : Récupère tous les projets d'une catégorie spécifique.
+
+Méthode : GET
+Paramètres : categorie (Nom de la catégorie)
+Retour : Liste des projets de la catégorie spécifiée.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /projects/categorie/agricole
+Réponse :
+json
+Copier le code
+{
+  "message": "sucess",
+  "project": [
+    {
+      "id": 1,
+      "titre": "Projet agricole 1",
+      ...
+    },
+    {
+      "id": 2,
+      "titre": "Projet agricole 2",
+      ...
+    }
+  ]
+}
+Endpoint : /projects/myprojects/:id
+Description : Récupère tous les projets d'un utilisateur spécifique par son ID (nécessite authentification).
+
+Méthode : GET
+Paramètres : id (ID de l'utilisateur)
+Retour : Liste des projets de l'utilisateur spécifié.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /projects/myprojects/1
+Réponse :
+json
+Copier le code
+[
+  {
+    "id": 1,
+    "titre": "Nom du projet",
+    ...
+  },
+  {
+    "id": 2,
+    "titre": "Autre projet",
+    ...
+  }
+]
+Endpoint : /projects
+Description : Crée un nouveau projet.
+
+Méthode : POST
+Paramètres : Données du projet (titre, description, duree, localisation, categorie, id, recompense, budget, totalRecu) avec upload d'images et de fichiers PDF.
+Retour : Détails du projet créé.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /projects
+Corps de la requête :
+json
+Copier le code
+{
+  "titre": "Nouveau projet",
+  "description": "Description du nouveau projet",
+  ...
+}
+Réponse :
+json
+Copier le code
+{
+  "success": true,
+  "projet": {
+    "id": 3,
+    "titre": "Nouveau projet",
+    ...
+  }
+}
+Endpoint : /projects/:id
+Description : Met à jour les données d'un projet existant.
+
+Méthode : PUT
+Paramètres : id (ID du projet à mettre à jour), Données du projet à modifier.
+Retour : Message de confirmation de la mise à jour.
+Exemple d'utilisation :
+bash
+Copier le code
+PUT /projects/1
+Corps de la requête :
+json
+Copier le code
+{
+  "titre": "Projet mis à jour",
+  "description": "Nouvelle description",
+  ...
+}
+Réponse :
+Copier le code
+Mise à jour réussie
+Endpoint : /projects/:id
+Description : Supprime un projet existant.
+
+Méthode : DELETE
+Paramètres : id (ID du projet à supprimer)
+Retour : Message de confirmation de la suppression.
+Exemple d'utilisation :
+bash
+Copier le code
+DELETE /projects/1
+Réponse :
+Copier le code
+Suppression réussie
+
+
+API pour la Gestion des Contributions
+Ce README décrit les endpoints disponibles pour la gestion des contributions via une API.
+
+Endpoint : /contributions
+Description : Récupère toutes les contributions.
+
+Méthode : GET
+Paramètres : Aucun
+Retour : Liste de toutes les contributions existantes.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /contributions
+Réponse :
+json
+Copier le code
+{
+  "success": true,
+  "contribution": [
+    {
+      "id": 1,
+      "montant": 1000,
+      "echeancePaiement": "Mensuelle",
+      "conditionRemboursement": "Aucune condition",
+      "releverBancaire": "https://exemple.com/relever",
+      "typeInvestissement": "Investissement en capital",
+      "userId": 1,
+      "projectId": 1,
+      "createdAt": "2024-06-19T12:00:00Z",
+      "updatedAt": "2024-06-20T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "montant": 500,
+      ...
+    }
+  ]
+}
+Endpoint : /contributions/:id
+Description : Récupère une contribution spécifique par son ID.
+
+Méthode : GET
+Paramètres : id (ID de la contribution)
+Retour : Détails de la contribution correspondant à l'ID.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /contributions/1
+Réponse :
+json
+Copier le code
+{
+  "success": true,
+  "findContributionById": {
+    "id": 1,
+    "montant": 1000,
+    "echeancePaiement": "Mensuelle",
+    "conditionRemboursement": "Aucune condition",
+    "releverBancaire": "https://exemple.com/relever",
+    "typeInvestissement": "Investissement en capital",
+    "userId": 1,
+    "projectId": 1,
+    "createdAt": "2024-06-19T12:00:00Z",
+    "updatedAt": "2024-06-20T08:00:00Z"
+  }
+}
+Endpoint : /contributions/users/:id
+Description : Récupère toutes les contributions d'un utilisateur spécifique par son ID (nécessite authentification).
+
+Méthode : GET
+Paramètres : id (ID de l'utilisateur)
+Retour : Liste des contributions de l'utilisateur spécifié.
+Exemple d'utilisation :
+bash
+Copier le code
+GET /contributions/users/1
+Réponse :
+json
+Copier le code
+[
+  {
+    "id": 1,
+    "montant": 1000,
+    ...
+  },
+  {
+    "id": 2,
+    "montant": 500,
+    ...
+  }
+]
+Endpoint : /contributions
+Description : Crée une nouvelle contribution.
+
+Méthode : POST
+Paramètres : Données de la contribution (montant, echeancePaiement, conditionRemboursement, releverBancaire, typeInvestissement, userId, projectId).
+Retour : Détails de la contribution créée.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /contributions
+Corps de la requête :
+json
+Copier le code
+{
+  "montant": 1500,
+  "echeancePaiement": "Mensuelle",
+  ...
+}
+Réponse :
+json
+Copier le code
+{
+  "success": true,
+  "newContribution": {
+    "id": 3,
+    "montant": 1500,
+    ...
+  }
+}
+Endpoint : /contributions/:id
+Description : Supprime une contribution existante.
+
+Méthode : DELETE
+Paramètres : id (ID de la contribution à supprimer)
+Retour : Message de confirmation de la suppression.
+Exemple d'utilisation :
+bash
+Copier le code
+DELETE /contributions/1
+Réponse :
+json
+Copier le code
+{
+  "success": true
+}
+
+
+API pour la Gestion de l'Authentification
+Ce README décrit les endpoints disponibles pour l'authentification via une API.
+
+Endpoint : /auth
+Description : Authentification utilisateur avec email et mot de passe.
+
+Méthode : POST
+Paramètres :
+email (string) : Adresse email de l'utilisateur.
+password (string) : Mot de passe de l'utilisateur.
+Retour : Réponse indiquant si l'authentification a réussi ou échoué, avec un message approprié.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /auth
+Corps de la requête :
+json
+Copier le code
+{
+  "email": "utilisateur@example.com",
+  "password": "MotDePasse1"
+}
+Réponse en cas de succès :
+json
+Copier le code
+{
+  "success": true,
+  "message": "OTP envoyé. Veuillez vérifier votre email",
+  "email": "utilisateur@example.com",
+  "user": {
+    "id": 1,
+    "email": "utilisateur@example.com",
+    "nom": "Nom de l'utilisateur",
+    ...
+  }
+}
+Réponse en cas d'échec (mauvaise adresse email ou mot de passe incorrect) :
+json
+Copier le code
+{
+  "success": false,
+  "message": "Email non reconnu, veuillez vous enregistrer"
+}
+Endpoint : /auth/verify-account
+Description : Vérification du code OTP pour finaliser l'authentification.
+
+Méthode : POST
+Paramètres :
+email (string) : Adresse email de l'utilisateur.
+otp (string) : Code OTP envoyé à l'utilisateur.
+Retour : Token JWT en cas de succès pour authentifier l'utilisateur dans les requêtes futures.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /auth/verify-account
+Corps de la requête :
+json
+Copier le code
+{
+  "email": "utilisateur@example.com",
+  "otp": "1234"
+}
+Réponse en cas de succès :
+json
+Copier le code
+{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTYyMzUwODI1MywiZXhwIjoxNjIzNTExODUzfQ.qCbI8_V6fsE1zzz8XUpfJ5CyQogDZp85o5adS_0xL5M"
+}
+Réponse en cas d'échec (code OTP incorrect) :
+json
+Copier le code
+{
+  "success": false,
+  "message": "OTP incorrect, veuillez réessayer"
+}
+Endpoint : /auth/forgot-password
+Description : Envoie d'un email avec un lien pour réinitialiser le mot de passe.
+
+Méthode : POST
+Paramètres :
+email (string) : Adresse email de l'utilisateur qui a oublié son mot de passe.
+Retour : Message indiquant si l'email a été envoyé avec succès ou s'il y a eu une erreur.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /auth/forgot-password
+Corps de la requête :
+json
+Copier le code
+{
+  "email": "utilisateur@example.com"
+}
+Réponse en cas de succès :
+json
+Copier le code
+{
+  "success": true,
+  "message": "Email sent successfully",
+  "token": "ad7e6537dabc241f9b0b85d12f7ba67431fcb61f"
+}
+Réponse en cas d'échec (utilisateur non trouvé) :
+json
+Copier le code
+{
+  "success": false,
+  "message": "Email not found, create an account"
+}
+Endpoint : /auth/reset-password
+Description : Réinitialisation du mot de passe après vérification du token envoyé par email.
+
+Méthode : POST
+Paramètres :
+password (string) : Nouveau mot de passe.
+token (string) : Token unique envoyé par email pour vérification.
+Retour : Message indiquant si le mot de passe a été mis à jour avec succès ou s'il y a eu une erreur.
+Exemple d'utilisation :
+bash
+Copier le code
+POST /auth/reset-password
+Corps de la requête :
+json
+Copier le code
+{
+  "password": "NouveauMotDePasse123",
+  "token": "ad7e6537dabc241f9b0b85d12f7ba67431fcb61f"
+}
+Réponse en cas de succès :
+json
+Copier le code
+{
+  "success": true,
+  "message": "Mot de passe mis à jour avec succès"
+}
+Réponse en cas d'échec (token invalide ou expiré) :
+json
+Copier le code
+{
+  "success": false,
+  "message": "Token invalide ou expiré"
+}
