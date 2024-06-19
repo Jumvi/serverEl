@@ -1,0 +1,76 @@
+Documentation de l'API pour la gestion des utilisateurs
+Cette API permet de gérer les utilisateurs d'une application à l'aide d'Express.js 
+et Prisma ORM. Elle inclut des fonctionnalités telles que la création, la récupération, 
+la mise à jour, et la suppression des utilisateurs, ainsi que l'envoi de courriels de vérification.
+
+Routes
+GET /users
+Récupère tous les utilisateurs présents dans la base de données.
+
+Réponse
+200 OK: Retourne un tableau d'objets représentant tous les utilisateurs.
+404 Not Found: Aucun utilisateur trouvé dans la base de données.
+GET /users/
+Récupère un utilisateur spécifique par son ID.
+
+Paramètres
+:id : L'identifiant unique de l'utilisateur à récupérer.
+Réponse
+200 OK: Retourne un objet représentant l'utilisateur spécifié.
+404 Not Found: Aucun utilisateur trouvé avec l'ID spécifié.
+POST /users
+Crée un nouvel utilisateur dans la base de données.
+
+Paramètres
+nom: Nom de l'utilisateur (string).
+postNom: Post-nom de l'utilisateur (string).
+email: Adresse email de l'utilisateur (string, format email valide requis).
+password: Mot de passe de l'utilisateur (string, au moins 8 caractères, commençant par une majuscule, contenant des lettres minuscules et des chiffres).
+telephone: Numéro de téléphone de l'utilisateur (number).
+type: Type de l'utilisateur (string).
+Biographie: Biographie de l'utilisateur (optionnel, string).
+localisation: Localisation de l'utilisateur (optionnel, string).
+profilImage: Image de profil de l'utilisateur (téléchargée via multipart form-data).
+Réponse
+201 Created: L'utilisateur est créé avec succès. Retourne un objet avec les détails de l'utilisateur créé et un token pour la vérification du compte.
+400 Bad Request: Les données fournies ne respectent pas le schéma de validation.
+PUT /users/
+Met à jour les données d'un utilisateur existant.
+
+Paramètres
+:id: L'identifiant unique de l'utilisateur à mettre à jour.
+nom: Nouveau nom de l'utilisateur (string).
+postNom: Nouveau post-nom de l'utilisateur (string).
+email: Nouvelle adresse email de l'utilisateur (string, format email valide requis).
+password: Nouveau mot de passe de l'utilisateur (string, au moins 8 caractères, commençant par une majuscule, contenant des lettres minuscules et des chiffres).
+telephone: Nouveau numéro de téléphone de l'utilisateur (number).
+type: Nouveau type de l'utilisateur (string).
+Réponse
+200 OK: Les données de l'utilisateur sont mises à jour avec succès.
+400 Bad Request: Les données fournies ne respectent pas le schéma de validation.
+404 Not Found: Aucun utilisateur trouvé avec l'ID spécifié.
+DELETE /users/
+Supprime un utilisateur existant de la base de données.
+
+Paramètres
+:id: L'identifiant unique de l'utilisateur à supprimer.
+Réponse
+200 OK: L'utilisateur est supprimé avec succès.
+404 Not Found: Aucun utilisateur trouvé avec l'ID spécifié.
+GET /users/verification/
+/
+Vérifie le compte d'un utilisateur en utilisant un token d'activation.
+
+Paramètres
+:id: L'identifiant unique de l'utilisateur à vérifier.
+:token: Token d'activation envoyé par email lors de la création du compte.
+Réponse
+200 OK: Le compte utilisateur est vérifié avec succès.
+404 Not Found: Lien de vérification invalide ou expiré.
+Schémas de Validation
+Les schémas de validation suivants sont utilisés pour valider les données des utilisateurs :
+
+emailSchema: Valide le format de l'email.
+passwordSchema: Valide le format et la complexité du mot de passe.
+nameSchema: Valide le format du nom et du post-nom.
+telephoneSchema: Valide le format du numéro de téléphone.

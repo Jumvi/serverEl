@@ -10,7 +10,7 @@ const authenticate = (req, res, next) => {
     }
 
     try {
-        // Supprimez le préfixe "Bearer" du token
+        
         
         const tokenWithoutBearer = token.replace('Bearer ', '');
         
