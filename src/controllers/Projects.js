@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { messaging } = require('firebase-admin');
 const Joi = require('joi');
 
 const prisma = new PrismaClient();
@@ -105,8 +106,29 @@ async function getProjectsByUsers(req, res) {
   }
 }
 
+async function getProjectByCategory(req,res){
+  const {categorie} = req.params;
+  try {
+    const project =await prisma.project.findMany({
+      where:{
+        categorie : categorie
+      }
+    })
+
+    if(!project){
+      res.status(400).json({message:'Not found'});
+    }
+
+    res.status(200).json({message:'sucess', project});
+    
+  } catch (error) {
+    console.error('erreur lors de la récupération des données', error);
+    res.status(500).json('Internal error', error.status)
+  }
+}
+
 async function createNewProject(req, res) {
-  const { titre, description,duree,localisation,categorie, id,recompense} = req.body; 
+  const { titre, description,duree,localisation,categorie, id,recompense,budget,totalRecu} = req.body; 
   const pdfProjet = req.files?.pdfProjet?.[0]?.path || null;
   const image = req.files?.image?.[0]?.path || null;
   const risque = req.files?.risque?.[0]?.path || null;
@@ -137,6 +159,8 @@ async function createNewProject(req, res) {
         localisation,
         categorie,
         image,
+        budget:parseFloat(budget),
+        totalRecu,
         pdfProjet,
         recompense,
         risque,
@@ -224,5 +248,6 @@ module.exports = {
   updateProject,
   deleteProject,
   getProjectById,
-  getProjectByName
+  getProjectByName,
+  getProjectByCategory
 };
