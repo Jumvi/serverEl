@@ -9,7 +9,6 @@ const Joi = require('joi');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
-const { log } = require('console');
 
 
 require('dotenv').config();

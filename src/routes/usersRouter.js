@@ -23,7 +23,7 @@ router.get('/', getAllUsers); // Récupération de tous les utilisateurs
 router.get('/admin/:id', passport.authenticate('jwt', { session: false }), getUsersById); // Récupération de l'utilisateur par id avec token
 router.get('/:id', getUsersById); // Récupération de l'utilisateur par id
 router.post('/', upload.single('profilImage'), createNewUser); // Création d'un nouvel utilisateur
-router.put('/:id', updateUsersData); // Mise à jour des données de l'utilisateur
+router.put('/:email',upload.single('profilImage'), updateUsersData); // Mise à jour des données de l'utilisateur
 router.delete('/:id', deleteuser); // Suppression de l'utilisateur
 
 module.exports = router;

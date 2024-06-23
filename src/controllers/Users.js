@@ -149,7 +149,6 @@ const transporter = nodemailer.createTransport({
               monToken:token,
               verified:false,
               profilImage,
-              Biography,
               localisation
           }
       });
@@ -185,9 +184,10 @@ async function verificationMail(res,req){
     }
 }
 async function updateUsersData(req,res,next){
-        const { email, password,telephone,nom,postNom,type } = req.body;
+        const {password,telephone,nom,postNom,type,localisation } = req.body;
+        const profilImage= req.file ? req.file.path : null;
         const { error } = await userSchema.validate({ email, password,telephone,nom,postNom,type });
-        const {id} = req.params;
+        const {email} = req.params;
 
         if (error) {
             console.error('Données non valides', error.details[0].message);
@@ -198,14 +198,14 @@ async function updateUsersData(req,res,next){
         
         const hashPassword = await bscript.hash(password, 10);
 
-        const findUser = await prisma.users.findUnique({where:{id:parseInt(id,10)}});
+        const findUser = await prisma.users.findUnique({where:{email:email}});
         if (!findUser) {
             return   res.status(404).send('Not found');
         }
 
         await prisma.users.update({
             where:{
-                id:parseInt(id,10)
+                email:email
             },
             data:{
                 nom,
@@ -213,7 +213,9 @@ async function updateUsersData(req,res,next){
                 email,
                 telephone,
                 password:hashPassword,
-                role:type
+                role:type,
+                profilImage,
+                localisation
             }
         })
 

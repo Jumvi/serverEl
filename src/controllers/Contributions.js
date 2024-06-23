@@ -23,10 +23,8 @@ const nameSchema = Joi.string()
     });
 
     const projectSchema = Joi.object({
-        montant: montantSchema,
         echeancePaiement: nameSchema,
         conditionRemboursement:nameSchema,
-        releverBancaire:nameSchema,
         typeInvestissement:nameSchema
         
     });
@@ -60,19 +58,24 @@ async function getContributionById(req,res){
 }
 
 async function createNewContribution(req,res){
-    const {montant,echeancePaiement,conditionRemboursement,releverBancaire,typeInvestissement,userId,projectId}=req.body;
-    const {error}= await projectSchema.validate({montant,echeancePaiement,conditionRemboursement,releverBancaire,typeInvestissement});
+    const {montant,titre,echeancePaiement,conditionRemboursement,typeInvestissement,userId}=req.body;
+     const releverBancaire = req.file ? req.file.path : null;
+    const {error}= await projectSchema.validate({echeancePaiement,conditionRemboursement,typeInvestissement});
     if (error) {
         console.error('Données non valides', error.details[0].message);
         return res.status(400).json({ success: false, message: error.details[0].message });
     }
     try {
+        const findProject = await prisma.project.findFirst({where:{titre:titre}});
+        if (!findProject) {
+            res.status(404).send({message:"not found"})
+        } 
         const newContribution = await prisma.contribution.create({
             data:{
-                montant,
+                montant:parseInt(montant),
                 echeancePaiement,
                 conditionRemboursement,
-                releverBancaire,
+                releverBancaire:releverBancaire,
                 typeInvestissement,
                 user:{
                     connect:{
@@ -81,7 +84,7 @@ async function createNewContribution(req,res){
                 },
                 project:{
                     connect:{
-                        id:parseInt(projectId,10)
+                        id:findProject.id
                     }
                 }
             }
