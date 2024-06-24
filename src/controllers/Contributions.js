@@ -77,7 +77,7 @@ async function createNewContribution(req,res){
            
         },
         data:{
-            totalRecu
+            totalRecu:findProject.totalRecu
         }
     })
         const newContribution = await prisma.contribution.create({
