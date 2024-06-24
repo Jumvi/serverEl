@@ -99,7 +99,7 @@ async function createNewContribution(req,res){
                 }
             }
         });
-        res.status(201).json({success:true,newContribution});
+        res.status(201).json({success:true,newContribution, titre:findProject.titre});
     } catch (error) {
         console.error("erreur lors de la création d\'une contribution:",error);
         res.status(500).send({message:error.status});
