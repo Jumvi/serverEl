@@ -70,6 +70,16 @@ async function createNewContribution(req,res){
         if (!findProject) {
             res.status(404).send({message:"not found"})
         } 
+
+        findProject.totalRecu = parseInt(findProject.totalRecu) + parseInt(montant);
+        await prisma.project.update({where:{
+            id:findProject.id,
+           
+        },
+        data:{
+            totalRecu
+        }
+    })
         const newContribution = await prisma.contribution.create({
             data:{
                 montant:parseInt(montant),
